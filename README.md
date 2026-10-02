@@ -1,5 +1,9 @@
 # Order Creator — Order Management Suite
 
+<p align="center">
+  <img src="screenshots/logo.png" width="160" alt="Tenue Pro Orders Manager logo"/>
+</p>
+
 > **This project was built for the company Tenue Pro**, which sells custom clothing (t-shirts, hoodies, caps, aprons…) with **printing (Impression)** and **embroidery (Broderie)**.
 
 Order Creator is a set of two Python desktop apps that handle the whole life of a customer order at Tenue Pro, from the moment a salesperson takes it to the moment it is printed in the workshop:
