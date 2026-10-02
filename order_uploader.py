@@ -1,5 +1,12 @@
 import os
 import csv
+
+# Load .env file if present (pip install python-dotenv)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 import io
 import base64
 import requests
@@ -33,9 +40,9 @@ import pickle
 import re
 
 # --- GitHub API utility functions (reuse from main app) ---
-github_token = "YOUR_GITHUB_TOKEN"
-github_repo = "ordercreator"
-github_owner = "YOUR_GITHUB_USERNAME"
+github_token = os.environ.get("GITHUB_TOKEN", "")
+github_repo = os.environ.get("GITHUB_REPO", "ordercreator")
+github_owner = os.environ.get("GITHUB_OWNER", "")
 
 def github_api_headers(json_mode=False):
     return {
@@ -207,8 +214,8 @@ def insert_order(order_data, file_paths):
     return [], []
 
 # --- Email sending function ---
-GMAIL_ADDRESS = "YOUR_GMAIL_ADDRESS@gmail.com"  # <-- Replace with your Gmail
-GMAIL_APP_PASSWORD = "YOUR_GMAIL_APP_PASSWORD"  # <-- Replace with your Gmail app password
+GMAIL_ADDRESS = os.environ.get("GMAIL_ADDRESS", "")
+GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "")
 
 # Google Drive API setup
 SCOPES = ['https://www.googleapis.com/auth/drive.file']

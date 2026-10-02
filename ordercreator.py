@@ -5,6 +5,13 @@ from PIL import Image
 import datetime
 import os
 import requests
+
+# Load .env file if present (pip install python-dotenv)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 import csv
 import io
 import tempfile
@@ -30,9 +37,9 @@ _font_registered = False  # Track if DejaVu font is registered
 # Example: pdf.set_font("Arial", '', 12)
 
 # --- GitHub API utility functions ---
-github_token = "YOUR_GITHUB_TOKEN"
-github_repo = "ordercreator"
-github_owner = "YOUR_GITHUB_USERNAME"  # TODO: Replace with your GitHub username
+github_token = os.environ.get("GITHUB_TOKEN", "")
+github_repo = os.environ.get("GITHUB_REPO", "ordercreator")
+github_owner = os.environ.get("GITHUB_OWNER", "")
 
 def github_api_headers(json_mode=False):
     return {
@@ -1085,8 +1092,8 @@ GMAIL_SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 # --- Google Sheets IDs ---
 SHEET_IDS = [
-    'YOUR_CHAIMA_SHEET_ID',
-    'YOUR_YOSR_SHEET_ID',
+    os.environ.get("CHAIMA_SHEET_ID", ""),
+    os.environ.get("YOSR_SHEET_ID", ""),
 ]
 
 # --- Utility: Get Sheets service ---
