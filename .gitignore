@@ -1,0 +1,11 @@
+# Google credentials and saved OAuth tokens
+*.json
+*.pickle
+.env
+
+# Python
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
