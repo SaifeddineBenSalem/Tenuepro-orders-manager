@@ -285,14 +285,12 @@ pip install fpdf pillow requests beautifulsoup4 httplib2 \
 
 ## Configuration
 
-Set these values at the top of each file, or better, move them to environment variables (see [Security notes](#security-notes)):
+All settings are loaded from environment variables. Copy `.env.example` → `.env` and fill in your values (see [Security notes](#security-notes) for the full list). The JSON credential files below must be placed in the same folder as the scripts:
 
-| Setting | File(s) | Description |
+| File | File(s) that use it | Description |
 |---|---|---|
-| `github_token`, `github_owner`, `github_repo` | both | Repository used as the database |
-| `GMAIL_ADDRESS`, `GMAIL_APP_PASSWORD` | `order_uploader.py` | Account that sends order emails (needs a Gmail **App Password**) |
-| `CREDENTIALS_FILE` | `order_uploader.py` | Google OAuth client JSON (Drive + Gmail) |
-| `SHEETS_SERVICE_ACCOUNT_FILE` | `ordercreator.py` | Service account JSON. Share both spreadsheets with this account. |
+| `client_secret.json` | both | Google OAuth client (Drive + Gmail). Rename your downloaded file to this. |
+| `service_account.json` | `ordercreator.py` | Google service account key (read-only Sheets access). Share both spreadsheets with this account's email. |
 | `GMAIL_OAUTH_CLIENT_FILE` | `ordercreator.py` | Google OAuth client JSON (Gmail) |
 | `SHEET_IDS` | `ordercreator.py` | IDs of the two Google Sheets: `[Chaima, Yosr]` |
 
@@ -356,21 +354,31 @@ The data files (`chaima.csv`, `yosr.csv`, `chaimadone.csv`, `yosrdone.csv`, `ver
 
 ## Security notes
 
-The current source code contains credentials **written directly in the code**: the GitHub token, the Gmail app password and the Google key file names. Before making the repository public:
+All credentials are loaded from **environment variables** — nothing is hardcoded in the source code. Copy `.env.example` to `.env`, fill in your values, and install `python-dotenv`:
 
-1. **Revoke** the GitHub token and the Gmail app password, then create new ones.
-2. Load secrets from environment variables or a `.env` file, for example:
-   ```python
-   github_token = os.environ["ORDERCREATOR_GITHUB_TOKEN"]
-   ```
-3. Add these to `.gitignore`:
-   ```
-   *.json
-   *.pickle
-   token.json
-   .env
-   ```
-4. Remember that files uploaded through the app are shared as *anyone with the link* on Google Drive, and that `uploads/` holds customer designs. Keep the data repository **private**.
+```bash
+pip install python-dotenv
+```
+
+The apps will pick up the values automatically. `.env` is listed in `.gitignore` and will never be committed.
+
+### Required variables
+
+| Variable | Description |
+|---|---|
+| `GITHUB_TOKEN` | Personal access token with **Contents: read & write** on the data repo |
+| `GITHUB_OWNER` | GitHub username that owns the data repo |
+| `GITHUB_REPO` | Name of the data repo (default: `ordercreator`) |
+| `GMAIL_ADDRESS` | Gmail address used to send order emails |
+| `GMAIL_APP_PASSWORD` | [Gmail App Password](https://myaccount.google.com/apppasswords) (requires 2-Step Verification) |
+| `CHAIMA_SHEET_ID` | ID of Chaima's Google Sheet (the long string in the spreadsheet URL) |
+| `YOSR_SHEET_ID` | ID of Yosr's Google Sheet |
+
+### Other things to keep private
+
+- `service_account.json` and `client_secret.json` — blocked by `.gitignore` (`*.json`)
+- `gmail_token.pickle`, `token.json` — blocked by `.gitignore` (`*.pickle`, `*.json`)
+- The **data repository** (`GITHUB_REPO`) should be kept **private** on GitHub — it holds customer orders and design images.
 
 ---
 
